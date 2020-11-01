@@ -1,0 +1,32 @@
+plugins {
+    id 'application'
+}
+
+apply plugin: 'application'
+mainClassName = 'wordfrequency.FrequencyCalculatorMain'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.jsoup', name: 'jsoup', version: '1.13.1'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Class-Path': configurations.compile.files.collect {"$it.name"}.join(' '),
+                'Main-Class': 'wordfrequency.FrequencyCalculatorMain'
+        )
+    }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+println 'This is executed during configuration phase'
+task configured {
+    println 'The project is configured'
+}
+
